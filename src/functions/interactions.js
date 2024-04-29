@@ -302,7 +302,7 @@ app.http('interactions', {
                                     context.debug(["INTERACTION", "SCHEMATIC_LIST_SUCCESS"]);
 
                                     //get the file names from the data and remove the file extension
-                                    const files = data.data.map((file) => file.attributes.name.replace(".schematic", ""));
+                                    const files = data.data.filter(a => a.endsWith(".schematic")).map((file) => file.attributes.name.replace(".schematic", ""));
                                     //split the files into chunks of up to 1950 characters
                                     const chunks = chunkify(files, 1950);
 
