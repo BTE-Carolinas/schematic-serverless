@@ -1,0 +1,17 @@
+{
+  "name": "schematic-serverless",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/functions": "^4.0.0",
+    "axios": "^1.6.8",
+    "discord-interactions": "^3.4.0",
+    "tweetnacl": "^1.0.3",
+    "unique-names-generator": "^4.7.1"
+  },
+  "main": "src/functions/*.js"
+}

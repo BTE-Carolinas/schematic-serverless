@@ -1,0 +1,31 @@
+{
+    "name": "schematic",
+    "description": "Download/Upload/List schematics on the server",
+    "options": [
+      {
+        "type": 1,
+        "name": "upload",
+        "description": "Upload schematics onto the server (will be assigned a random name)",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "List schematics on the server",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "download",
+        "description": "Download a schematic on the server",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name of the schematic (excluding file ending)",
+            "required": true
+          }
+        ]
+      }
+    ]
+  }

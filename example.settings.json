@@ -1,0 +1,14 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+      "AzureWebJobsStorage": "",
+      "FUNCTIONS_WORKER_RUNTIME": "node",
+      "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+      "PublicKey": "", //fetch from discord
+      "Token": "", //fetch from discord
+      "ApplicationID": "", //fetch from discord
+      "ServerID": "", //fetch from pterodactyl
+      "PterodactylToken": "", //fetch from pterodactyl as user
+      "PterodactylURL": "" //pterodactyl url
+    }
+  }
