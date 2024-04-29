@@ -157,7 +157,7 @@ app.http('interactions', {
                                 Authorization: `Bearer ${process.env.PterodactylToken}`
                             }
                         });
-                        
+
                         switch (body.data.options[0].name) {
                             //subcommands for the schematic command
 
@@ -175,7 +175,7 @@ app.http('interactions', {
                                             file: `/plugins/WorldEdit/schematics/${body.data.options[0].options[0].value}.schematic`
                                         }
                                     });
-                                    
+
                                     //download the file, can't supply the one-time link due to discord pre-emptively fetching the file
                                     const { data: file } = await axios.get(data.attributes.url, { responseType: 'arraybuffer' });
 
@@ -190,7 +190,7 @@ app.http('interactions', {
                                     await discord.post(`/channels/${body.channel_id}/messages`, form);
 
                                     context.info(["INTERACTION", "SCHEMATIC_DOWNLOAD_SUCCESS"]);
-                                    
+
                                     //return a response to the user, confirming the download
                                     return {
                                         jsonBody: {
@@ -220,7 +220,7 @@ app.http('interactions', {
                             //upload a schematic file to the server
                             case "upload":
                                 context.debug(["INTERACTION", "SCHEMATIC_UPLOAD"]);
-                                
+
                                 //get the file URL from the command, uploaded as an attachment
                                 const fileURL = body.data.resolved.attachments[body.data.options[0].options[0].value].url;
                                 //get the file extension from the file name
@@ -239,7 +239,7 @@ app.http('interactions', {
                                         },
                                     };
                                 }
-                                
+
 
                                 context.debug(["INTERACTION", "SCHEMATIC_UPLOAD_START"]);
 
@@ -335,7 +335,7 @@ app.http('interactions', {
                                     };
                                 }
                                 break;
-                            
+
                             //command could not be found
                             default:
                                 return {
