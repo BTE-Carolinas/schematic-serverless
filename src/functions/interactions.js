@@ -31,7 +31,7 @@ function chunkify(dat, size) {
 
 //initialize http endpoint for interactions
 app.http('interactions', {
-    methods: ['GET', 'POST'],
+    methods: ['POST'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
         context.info(["INTERACTION"]);
