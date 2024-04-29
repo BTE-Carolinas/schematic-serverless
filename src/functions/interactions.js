@@ -15,7 +15,7 @@ const { uniqueNamesGenerator, adjectives, colors, animals, names } = require('un
 function chunkify(dat, size) {
     var chunks = [];
     dat.reduce((chuckStr, word, i, a) => {
-        var pageIndex = `--- Seite ${(chunks.length + 1)} --- \n \n`;
+        var pageIndex = `--- Page ${(chunks.length + 1)} --- \n \n`;
         if ((chuckStr.length + word.length + pageIndex.length) > size) {
             chunks.push(pageIndex + chuckStr);
             chuckStr = word;
