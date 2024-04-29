@@ -135,7 +135,7 @@ app.http('interactions', {
                 switch (body.data["name"]) {
                     /*
                     case "ping":
-                        //generic ping command, can be used to test if the bot is online
+                        //generic ping command, can be used to test if the bot is online, has to be added manually to the discord application
                         return {
                             jsonBody: {
                                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
