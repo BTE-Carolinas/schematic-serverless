@@ -1,9 +1,21 @@
-const { app, HttpResponse } = require('@azure/functions');
-const { InteractionType, InteractionResponseType } = require('discord-interactions');
+const {
+    app,
+    HttpResponse
+} = require('@azure/functions');
+const {
+    InteractionType,
+    InteractionResponseType
+} = require('discord-interactions');
 const nacl = require("tweetnacl");
 const axios = require("axios");
 const FormData = require("form-data");
-const { uniqueNamesGenerator, adjectives, colors, animals, names } = require('unique-names-generator');
+const {
+    uniqueNamesGenerator,
+    adjectives,
+    colors,
+    animals,
+    names
+} = require('unique-names-generator');
 
 /*
  * Splits an array of strings into chunks based on a given size.
@@ -49,7 +61,9 @@ app.http('interactions', {
         //check if the signature and timestamp are not empty and have the correct length
         if (!signature || !timestamp || signature.length < 64 || timestamp.length < 10) {
             context.debug(["INTERACTION", "MISSING_SIGNATURE_OR_TIMESTAMP"]);
-            return new HttpResponse({ status: 401 });
+            return new HttpResponse({
+                status: 401
+            });
         }
 
         //verify the signature
@@ -60,7 +74,9 @@ app.http('interactions', {
         );
         if (!isVerified) {
             context.debug(["INTERACTION", "UNVERIFIED"]);
-            return new HttpResponse({ status: 401 });
+            return new HttpResponse({
+                status: 401
+            });
         }
 
         //initiate axios instances for discord and pterodactyl, save resources by doing this after the verification
@@ -83,19 +99,16 @@ app.http('interactions', {
                 await discord.post(`/applications/${process.env.ApplicationID}/commands`, {
                     "name": "schematic",
                     "description": "Download/Upload/List schematics on the server",
-                    "options": [
-                        {
+                    "options": [{
                             "type": 1,
                             "name": "upload",
                             "description": "Upload schematics onto the server (will be assigned a random name)",
-                            "options": [
-                                {
-                                    "type": 11,
-                                    "name": "file",
-                                    "description": "The schematic file to upload",
-                                    "required": true
-                                }
-                            ]
+                            "options": [{
+                                "type": 11,
+                                "name": "file",
+                                "description": "The schematic file to upload",
+                                "required": true
+                            }]
                         },
                         {
                             "type": 1,
@@ -107,14 +120,12 @@ app.http('interactions', {
                             "type": 1,
                             "name": "download",
                             "description": "Download a schematic on the server",
-                            "options": [
-                                {
-                                    "type": 3,
-                                    "name": "name",
-                                    "description": "Name of the schematic (excluding file ending)",
-                                    "required": true
-                                }
-                            ]
+                            "options": [{
+                                "type": 3,
+                                "name": "name",
+                                "description": "Name of the schematic (excluding file ending)",
+                                "required": true
+                            }]
                         }
                     ]
                 }).then(() => {
@@ -169,7 +180,9 @@ app.http('interactions', {
                                     context.debug(["INTERACTION", "SCHEMATIC_DOWNLOAD_START"]);
 
                                     //get the download link for the schematic file
-                                    const { data } = await pterodactyl.get(`/api/client/servers/${process.env.ServerID}/files/download`, {
+                                    const {
+                                        data
+                                    } = await pterodactyl.get(`/api/client/servers/${process.env.ServerID}/files/download`, {
                                         params: {
                                             //get the name of the schematic file from the command
                                             file: `/plugins/WorldEdit/schematics/${body.data.options[0].options[0].value}.schematic`
@@ -177,7 +190,11 @@ app.http('interactions', {
                                     });
 
                                     //download the file, can't supply the one-time link due to discord pre-emptively fetching the file
-                                    const { data: file } = await axios.get(data.attributes.url, { responseType: 'arraybuffer' });
+                                    const {
+                                        data: file
+                                    } = await axios.get(data.attributes.url, {
+                                        responseType: 'arraybuffer'
+                                    });
 
                                     //initiate a formdata object and append the file to it
                                     const form = new FormData();
@@ -217,7 +234,7 @@ app.http('interactions', {
                                 }
                                 break;
 
-                            //upload a schematic file to the server
+                                //upload a schematic file to the server
                             case "upload":
                                 context.debug(["INTERACTION", "SCHEMATIC_UPLOAD"]);
 
@@ -244,12 +261,19 @@ app.http('interactions', {
                                 context.debug(["INTERACTION", "SCHEMATIC_UPLOAD_START"]);
 
                                 //download the file from the URL
-                                const fileData = await axios.get(fileURL, { responseType: 'arraybuffer' });
+                                const fileData = await axios.get(fileURL, {
+                                    responseType: 'arraybuffer'
+                                });
                                 //convert the file data to a buffer
                                 const buffer = Buffer.from(fileData.data, 'binary');
 
                                 //generate a random name for the file
-                                const newfilename = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals, names], separator: "", style: 'capital', length: 3 });
+                                const newfilename = uniqueNamesGenerator({
+                                    dictionaries: [adjectives, colors, animals, names],
+                                    separator: "",
+                                    style: 'capital',
+                                    length: 3
+                                });
 
                                 //wrap the upload in a try-catch block to catch any errors, such as the file-upload failing
                                 try {
@@ -271,8 +295,7 @@ app.http('interactions', {
                                             },
                                         }
                                     }
-                                }
-                                catch (err) {
+                                } catch (err) {
                                     context.error(["INTERACTION", "SCHEMATIC_UPLOAD_FAILED", err]);
 
                                     return {
@@ -287,13 +310,15 @@ app.http('interactions', {
 
                                 break;
 
-                            //list all schematic files on the server
+                                //list all schematic files on the server
                             case "list":
                                 context.debug(["INTERACTION", "SCHEMATIC_LIST"]);
                                 try {
                                     context.debug(["INTERACTION", "SCHEMATIC_LIST_START"]);
                                     //get the list of files in the schematic directory
-                                    const { data } = await pterodactyl.get(`/api/client/servers/${process.env.ServerID}/files/list`, {
+                                    const {
+                                        data
+                                    } = await pterodactyl.get(`/api/client/servers/${process.env.ServerID}/files/list`, {
                                         params: {
                                             directory: "/plugins/WorldEdit/schematics"
                                         }
@@ -302,22 +327,31 @@ app.http('interactions', {
                                     context.debug(["INTERACTION", "SCHEMATIC_LIST_SUCCESS"]);
 
                                     //get the file names from the data and remove the file extension
-                                    const files = data.data.filter(a => a.endsWith(".schematic")).map((file) => file.attributes.name.replace(".schematic", ""));
+                                    const files = data.data.filter(a => a.attributes.name.endsWith(".schematic")).map((file) => file.attributes.name.replace(".schematic", ""));
+                                    //create txt file with the file names
+                                    const file = new Blob([files.join("\n")], {
+                                        type: 'text/plain'
+                                    });
+                                    //send file to the discord channel
+
                                     //split the files into chunks of up to 1950 characters
                                     const chunks = chunkify(files, 1950);
 
                                     //send each chunk as a separate message to the discord channel
+                                    let first = true;
                                     for (const chunk of chunks) {
                                         await discord.post(`/channels/${body.channel_id}/messages`, {
-                                            content: "```" + chunk + "```"
+                                            content: ((first) ? `<@!${body.member.user.id}> \n` : "") + "```" + chunk + "```"
                                         });
+                                        first = false;
                                     }
 
                                     return {
                                         jsonBody: {
                                             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                                             data: {
-                                                content: `Schematics on the server:`
+                                                content: `Schematics on the server:`,
+                                                flags: 64 //epehemeral message
                                             },
                                         }
                                     }
@@ -330,13 +364,14 @@ app.http('interactions', {
                                             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                                             data: {
                                                 content: 'Failed to list the schematic files.',
+                                                flag: 64 //ephemeral message
                                             },
                                         },
                                     };
                                 }
                                 break;
 
-                            //command could not be found
+                                //command could not be found
                             default:
                                 return {
                                     jsonBody: {
@@ -349,7 +384,7 @@ app.http('interactions', {
                         }
                         break;
 
-                    //command group could not be found
+                        //command group could not be found
                     default:
                         return {
                             jsonBody: {
@@ -366,7 +401,9 @@ app.http('interactions', {
             default:
                 //unknown interaction type
                 context.warn(["INTERACTION", "UNKNOWN_TYPE"]);
-                return new HttpResponse({ status: 400 });
+                return new HttpResponse({
+                    status: 400
+                });
         }
     }
 });
